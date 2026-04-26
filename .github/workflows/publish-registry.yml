@@ -48,6 +48,28 @@ jobs:
           printf '{"name":"greet","vers":"%s","deps":[],"cksum":"%s","features":{},"yanked":false}\n' \
             "$VERSION" "$SHA" > site/gr/ee/greet
 
+          cat > site/index.html <<EOF
+          <!DOCTYPE html>
+          <html lang="en">
+          <head>
+            <meta charset="utf-8">
+            <title>gh-pages-registry-demo</title>
+          </head>
+          <body>
+            <h1>gh-pages-registry-demo</h1>
+            <p>This is a minimal Cargo registry used to demonstrate a
+            <a href="https://github.com/bazelbuild/rules_rust/issues/3991>checksum mismatch bug</a>
+            in <code>rules_rust</code> when a registry is hosted on GitHub Pages.</p>
+            <p>The registry hosts one crate:</p>
+            <ul>
+              <li><code>greet ${VERSION}</code> &mdash; checksum <code>${SHA}</code></li>
+            </ul>
+            <p>Sparse index: <a href="gr/ee/greet"><code>gr/ee/greet</code></a> &bull;
+            Download: <a href="crates/greet-${VERSION}.crate"><code>greet-${VERSION}.crate</code></a></p>
+          </body>
+          </html>
+          EOF
+
       - uses: actions/configure-pages@v5
 
       - uses: actions/upload-pages-artifact@v3
