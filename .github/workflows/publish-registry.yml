@@ -1,0 +1,58 @@
+name: Publish registry to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - greet/**
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Package greet crate
+        run: cargo package --no-verify
+        working-directory: greet
+
+      - name: Build registry site
+        run: |
+          set -euo pipefail
+          OWNER="${{ github.repository_owner }}"
+          REPO="${{ github.event.repository.name }}"
+
+          CRATE_FILE=$(echo greet/target/package/greet-*.crate)
+          VERSION=$(echo "$CRATE_FILE" | sed 's|.*/greet-\(.*\)\.crate|\1|')
+          SHA=$(sha256sum "$CRATE_FILE" | awk '{print $1}')
+
+          mkdir -p site/crates site/gr/ee
+
+          cp "$CRATE_FILE" site/crates/
+
+          cat > site/config.json <<EOF
+          {
+            "dl": "https://${OWNER}.github.io/${REPO}/crates/{crate}-{version}.crate"
+          }
+          EOF
+
+          printf '{"name":"greet","vers":"%s","deps":[],"cksum":"%s","features":{},"yanked":false}\n' \
+            "$VERSION" "$SHA" > site/gr/ee/greet
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+      - id: deploy
+        uses: actions/deploy-pages@v4
