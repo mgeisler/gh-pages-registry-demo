@@ -10,7 +10,7 @@ Pages (or any CDN that applies `Content-Encoding: gzip` based on the client's
 | | |
 |---|---|
 | Bazel | 9.1.0 |
-| rules_rust | 0.65.0 |
+| rules_rust | 0.70.0 |
 | OS | macOS 26 (arm64) |
 
 ## Repository structure

@@ -1,5 +1,5 @@
 module(name = "gh-pages-registry-demo", version = "0.1.0")
-bazel_dep(name = "rules_rust", version = "0.65.0")
+bazel_dep(name = "rules_rust", version = "0.70.0")
 
 crate = use_extension("@rules_rust//crate_universe:extension.bzl", "crate")
 crate.from_cargo(
