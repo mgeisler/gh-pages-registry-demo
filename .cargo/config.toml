@@ -1,0 +1,2 @@
+[registries.custom-registry]
+index = "sparse+https://mgeisler.github.io/gh-pages-registry-demo/"
